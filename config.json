@@ -1,0 +1,59 @@
+{
+  "window": { "width": 960, "height": 540, "title": "袋鼠大乱斗 · 菜单版" },
+  "menu": { "background_image": "assets/menu_bg.png" },
+  "physics": { "gravity": 1.0, "jump_v": -18, "move_speed": 6, "hitstop": 6, "fps": 60 },
+  "stage": {
+    "background_color": [210, 230, 255],
+    "background_image": "assets/game_bg.png",
+    "ground_color": [80, 160, 80],
+    "ring": {
+      "enabled": true,
+      "rect": [120, 340, 720, 140],
+      "deck_color": [230, 230, 230],
+      "edge_color": [40, 40, 40]
+    }
+  },
+  "ui": {
+    "font_small_size": 24,
+    "left_margin": 40,
+    "top_margin": 24,
+    "bar_w": 360,
+    "bar_h": 18,
+    "name_avatar_gap": 8,
+    "name_bar_gap": 6,
+    "button_w": 220,
+    "button_h": 56
+  },
+  "players": [
+    {
+      "name": "P1",
+      "display_name": "player 1",
+      "start_x": 240,
+      "size": [80, 120],
+      "color": [255, 200, 80],
+      "sprite_image": "",
+      "facing_right": true,
+      "hp": 100,
+      "keys": { "L": "a", "R": "d", "JUMP": "w", "ATK": "f" }
+    },
+    {
+      "name": "P2",
+      "display_name": "player 2",
+      "start_x": 640,
+      "size": [80, 120],
+      "color": [80, 200, 255],
+      "sprite_image": "",
+      "facing_right": false,
+      "hp": 100,
+      "keys": { "L": "left", "R": "right", "JUMP": "up", "ATK": "k" }
+    }
+  ],
+  "attack": { "damage": 8, "knockback": 8, "startup": 3, "active": 8, "recovery": 7,
+    "hitbox": { "w": 48, "h": 24, "y_offset": 30 }
+  },
+  "author": {
+    "name": "ZHAOYANG GUO",
+    "email": "zguo0699@uni.sudney.edu.au",
+    "desc": "9001"
+  }
+}
