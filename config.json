@@ -1,5 +1,5 @@
 {
-  "window": { "width": 960, "height": 540, "title": "The Kangaroo of Fighters · 菜单版" },
+  "window": { "width": 960, "height": 540, "title": "The Kangaroo of Fighters" },
   "menu": { "background_image": "assets/menu_bg.png" },
   "physics": { "gravity": 1.0, "jump_v": -18, "move_speed": 6, "hitstop": 6, "fps": 60 },
   "stage": {
