@@ -17,13 +17,13 @@ def ask_image_file() -> Optional[str]:
         from tkinter import filedialog
         root = tk.Tk(); root.withdraw()
         path = filedialog.askopenfilename(
-            title="选择角色图片",
-            filetypes=[("图片", "*.png;*.jpg;*.jpeg;*.bmp;*.gif"), ("所有文件", "*.*")]
+            title="Select Player's Image",
+            filetypes=[("Image", "*.png;*.jpg;*.jpeg;*.bmp;*.gif"), ("All Files", "*.*")]
         )
         root.destroy()
         return path if path else None
     except Exception as e:
-        print("[filedialog] 打开失败：", e)
+        print("[filedialog] fail to open：", e)
         return None
 
 def deep_update(base: dict, other: dict) -> dict:
@@ -36,7 +36,7 @@ def deep_update(base: dict, other: dict) -> dict:
 
 def load_config(path="config.json") -> Dict[str, Any]:
     DEFAULT = {
-        "window": {"width": 960, "height": 540, "title": "袋鼠大乱斗 · 菜单版"},
+        "window": {"width": 960, "height": 540, "title": "The Kangaroo of Fighters"},
         "menu": {"background_image": ""},  # 新增：菜单背景图配置
         "physics": {"gravity":1.0,"jump_v":-18,"move_speed":6,"hitstop":6,"fps":60},
         "stage": {"background_color":[210,230,255],"background_image":"","ground_color":[80,160,80],
@@ -50,7 +50,7 @@ def load_config(path="config.json") -> Dict[str, Any]:
              "sprite_image":"","facing_right":False,"hp":100,"keys":{"L":"left","R":"right","JUMP":"up","ATK":"k"}}
         ],
         "attack":{"damage":8,"knockback":8,"startup":3,"active":8,"recovery":7,"hitbox":{"w":48,"h":24,"y_offset":30}},
-        "author":{"name":"Author","email":"author@example.com","desc":"袋鼠大乱斗作者"}
+        "author":{"name":"ZhaoyangGuo","email":"zguo0699@uni.sudneyedu.au"}
     }
     cfg = DEFAULT.copy()
     if os.path.exists(path):
@@ -99,9 +99,9 @@ def main():
     btn_w = int(cfg["ui"].get("button_w", 220))
     btn_h = int(cfg["ui"].get("button_h", 56))
     start_btn = Button(pg.Rect(W//2 - btn_w//2, H//2 - 70, btn_w, btn_h),
-                       "开始游戏", font, on_click=lambda: open_select_modal())
+                       "START", font, on_click=lambda: open_select_modal())
     about_btn = Button(pg.Rect(W//2 - btn_w//2, H//2 + 10, btn_w, btn_h),
-                       "作者信息", font, on_click=lambda: open_about_modal())
+                       "ABOUT", font, on_click=lambda: open_about_modal())
 
     # ——全局弹窗（需要时创建）
     current_modal: Optional[Modal] = None
@@ -111,17 +111,17 @@ def main():
         author = cfg.get("author", {})
         def drawer(surf: pg.Surface, rect: pg.Rect):
             lines = [
-                f"作者：{author.get('name','N/A')}",
-                f"邮箱：{author.get('email','N/A')}",
-                f"简介：{author.get('desc','')}"
+                f"Name：{author.get('name','N/A')}",
+                f"Email：{author.get('email','N/A')}",
+                # f"Intro：{author.get('desc','')}"
             ]
             y = rect.y
             for t in lines:
                 t_surf = small.render(t, True, (0,0,0))
                 surf.blit(t_surf, (rect.x, y))
                 y += t_surf.get_height() + 6
-        m = Modal((520, 260), "作者信息", font, drawer)
-        ok = Button(pg.Rect(0,0,140,48), "确定", small, on_click=lambda: close_modal())
+        m = Modal((520, 260), "Information of Author", font, drawer)
+        ok = Button(pg.Rect(0,0,140,48), "BACK", small, on_click=lambda: close_modal())
         m.add_button(ok)
         current_modal = m
 
@@ -136,8 +136,8 @@ def main():
         def drawer(surf: pg.Surface, rect: pg.Rect):
             nonlocal preview_p1, preview_p2
             # 标题行
-            t1 = small.render("玩家1 图片：", True, (0,0,0))
-            t2 = small.render("玩家2 图片：", True, (0,0,0))
+            t1 = small.render("Select Player1 Image：", True, (0,0,0))
+            t2 = small.render("Select Player2 Image：", True, (0,0,0))
             surf.blit(t1, (rect.x, rect.y))
             surf.blit(t2, (rect.x, rect.y + 120))
 
@@ -151,7 +151,7 @@ def main():
             if preview_p2: surf.blit(preview_p2, (box2.x + (box2.w-preview_p2.get_width())//2,
                                                   box2.y + (box2.h-preview_p2.get_height())//2))
 
-        m = Modal((640, 420), "选择角色图片", font, drawer)
+        m = Modal((640, 420), "Select Player's Image", font, drawer)
 
         def on_choose_p1():
             nonlocal chosen_p1, preview_p1
@@ -170,8 +170,8 @@ def main():
                 preview_p2 = pg.transform.smoothscale(img, (120, 60))
 
         # 左侧两个“选择图片”按钮
-        m.add_button(Button(pg.Rect(0,0,160,48), "选择玩家1图片", small, on_click=on_choose_p1))
-        m.add_button(Button(pg.Rect(0,0,160,48), "选择玩家2图片", small, on_click=on_choose_p2))
+        m.add_button(Button(pg.Rect(0,0,160,48), "Player1", small, on_click=on_choose_p1))
+        m.add_button(Button(pg.Rect(0,0,160,48), "Player2", small, on_click=on_choose_p2))
 
         def on_confirm():
             nonlocal STATE, game_scene, current_modal
@@ -180,17 +180,17 @@ def main():
             game_scene = GameScene(cfg, screen, chosen_p1, chosen_p2, on_game_end=open_end_modal)
 
         # 确认 / 取消
-        m.add_button(Button(pg.Rect(0,0,140,48), "确认", small, on_click=on_confirm))
-        m.add_button(Button(pg.Rect(0,0,140,48), "取消", small, on_click=lambda: close_modal()))
+        m.add_button(Button(pg.Rect(0,0,140,48), "START", small, on_click=on_confirm))
+        m.add_button(Button(pg.Rect(0,0,140,48), "BACK", small, on_click=lambda: close_modal()))
         current_modal = m
 
     def open_end_modal(winner_name: str):
         """游戏结束弹窗（由 GameScene 回调触发）"""
         nonlocal current_modal, STATE, game_scene, chosen_p1, chosen_p2
         def drawer(surf: pg.Surface, rect: pg.Rect):
-            t = small.render(f"{winner_name} 获胜！", True, (0,0,0))
+            t = small.render(f"{winner_name} wins！", True, (0,0,0))
             surf.blit(t, (rect.x, rect.y))
-        m = Modal((520, 220), "比赛结束", font, drawer)
+        m = Modal((520, 220), "GAME OVER", font, drawer)
 
         def rematch():
             nonlocal game_scene
@@ -204,8 +204,8 @@ def main():
             STATE = "MENU"
             game_scene = None
 
-        m.add_button(Button(pg.Rect(0,0,160,48), "再来一局", small, on_click=rematch))
-        m.add_button(Button(pg.Rect(0,0,160,48), "主界面", small, on_click=back_to_menu))
+        m.add_button(Button(pg.Rect(0,0,160,48), "AGAIN", small, on_click=rematch))
+        m.add_button(Button(pg.Rect(0,0,160,48), "HOME", small, on_click=back_to_menu))
         current_modal = m
 
     def close_modal():
@@ -231,7 +231,7 @@ def main():
                 screen.blit(menu_bg, (0, 0))
             else:
                 screen.fill((240, 248, 255))
-            title = font.render("袋鼠大乱斗", True, (0,0,0))
+            title = font.render("The Kangaroo of Fighters", True, (0,0,0))
             screen.blit(title, (W//2 - title.get_width()//2, 120))
             start_btn.draw(screen)
             about_btn.draw(screen)
